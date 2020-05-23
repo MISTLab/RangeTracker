@@ -13,12 +13,14 @@ import pickle
 curPath = sys.path[0]
 
 def saveToFile(name):
-    with open(curPath+'/result_cache/diffWheelRobot.pkl', 'wb') as output:
-        pickle.dump(name, output, pickle.HIGHEST_PROTOCOL)
+    print("Save simulation data to ./result_cache/lastSimData.pkl")
+    with open(curPath+'/result_cache/lastSimData.pkl', 'wb') as output:
+        pickle.dump(name, output)
     output.close()
 
 def readFromFile():
-    with open(curPath+'/result_cache/diffWheelRobot.pkl', 'rb') as input:
+    print("Read simulation data from ./result_cache/lastSimData.pkl")
+    with open(curPath+'/result_cache/lastSimData.pkl', 'rb') as input:
        return pickle.load(input)
 
 
