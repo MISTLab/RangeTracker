@@ -6,43 +6,37 @@ sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'trackerCore'))
 from tracker import tracker
 from simulationData import sim, readFromFile, saveToFile
 from plot import plot_sim, plot_sim_error
+from parameters import *
 
 if __name__ == '__main__':
 
-    ##Generate new simulation data
+    #Using last time data or generate new simulation data
+    if UsingLastTimeData:
+        simData = readFromFile()
+    else:
+        simData = sim()
+        simData.generate_sim_root()
+        simData.generate_sim()
+        saveToFile(simData)
 
-    # simData = sim()
-    # simData.generate_sim_root()
-    # simData.generate_sim()
-    # simData.plot_sim()
-    # saveToFile(simData)
-
-    simData = readFromFile()
-
+    # Create two tracker for compare
     myTrackerExp = tracker()
     refMyTracker = tracker()
 
-    simulation = True
-    myTrackerExp.setup_mode(simulation)
+    # Set tracker mode to simulation, disable the speedEstimator of the reference tracker
+    myTrackerExp.setup_mode(IsSimulation)
     speedEstimatorSwitch = False
-    refMyTracker.setup_mode(simulation,speedEstimatorSwitch)
+    refMyTracker.setup_mode(IsSimulation,speedEstimatorSwitch)
 
-    covS_X = 0.01  # covariance of state
-    covS_Y = 0.01
-    covS_Ori = 0.01
-    covS_LVel = 0.01
-
-    covM_Range = 0.1  # Covariance of range measurement
-    covM_Ori = 0.1
-
+    # Set covariance for the EKF
     refMyTracker.ekf.set_covs(covS_X, covS_Y, covS_Ori, covS_LVel, covM_Range, covM_Ori)
     myTrackerExp.ekf.set_covs(covS_X, covS_Y, covS_Ori, covS_LVel, covM_Range, covM_Ori)
 
-    initialState = [10., 0., 0., 0.0]  
+    # Set initial state for the EKF
     refMyTracker.ekf.set_initial_state(initialState)
     myTrackerExp.ekf.set_initial_state(initialState)
 
-
+    # Choose measurement input
     uwbInput = simData.uwbNoisy
     yawInput = simData.yawNoisy
     timeInput = simData.timestamp
@@ -53,5 +47,6 @@ if __name__ == '__main__':
         refMyTracker.step(measurement)
         myTrackerExp.step(measurement)
 
+    # Plot the result to result_cache folder
     plot_sim(simData,refMyTracker,myTrackerExp)
     plot_sim_error(simData,refMyTracker,myTrackerExp)

@@ -1,5 +1,4 @@
 
-# Perfect simulation data to test
 import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]), 'trackerCore'))
