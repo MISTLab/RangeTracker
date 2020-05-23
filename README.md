@@ -1,6 +1,5 @@
 # RangeTracker
-[Accurate position tracking with a single UWB anchor](https://arxiv.org/abs/2005.10648)
-[Video Material](https://www.youtube.com/watch?v=UIZFHskukYo)
+[Accurate position tracking with a single UWB anchor](https://arxiv.org/abs/2005.10648).([Video Material](https://www.youtube.com/watch?v=UIZFHskukYo))
 
 
 - Running requirement: numpy, scipy, matplotlib(for plot)
